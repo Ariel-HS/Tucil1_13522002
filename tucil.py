@@ -1,43 +1,36 @@
+import os.path
+import time
+import random
 
-# dummy test
-buffer_size = 7
-width = 6
-height = 6
-matrix = [
-    ['7A','55','E9','E9','1C','55'],
-    ['55','7A','1C','7A','E9','55'],
-    ['55','1C','1C','55','E9','BD'],
-    ['BD','1C','7A','1C','55','BD'],
-    ['BD','55','BD','7A','1C','1C'],
-    ['1C','55','55','7A','55','7A'],
-]
-'''
-[
-    ['7A','55','E9'],
-    ['1C','6D','8F'],
-    ['2S','3X','4H']
-]
-'''
+input_type = input("Apakah ingin memasukkan input melalui file atau secara acak?(file/acak) ")
+while input_type != 'file' and input_type != 'acak':
+    print("Invalid input")
+    input_type = input("Apakah ingin memasukkan input melalui file atau secara acak?(file/acak) ")
 
-sequences_amount = 3
-sequences = [
-    ['BD','E9','1C'],
-    ['BD','7A','BD'],
-    ['BD','1C','BD','55']
-]
-'''
-[
-    ['55','6D'],
-    ['E9','8F','1C','7A'],
-    ['7A','2S','4H']
-]
-'''
+if input_type == 'file':
+    file_name = input("Enter absolute path: ")
+    while not os.path.isfile(file_name):
+        print("File not found")
+        file_name = input("Enter absolute path: ")
 
-sequences_reward = [
-    15,
-    20,
-    30
-]
+    file = open(file_name,'r')
+
+    buffer_size = int(file.readline().rstrip())
+    dimension = file.readline().rstrip().split()
+    width = int(dimension[0])
+    height = int(dimension[1])
+    matrix = [file.readline().rstrip().split() for i in range(height)]
+    sequences_amount = int(file.readline().rstrip())
+    sequences = []
+    sequences_reward = []
+    for i in range(sequences_amount):
+        sequences.append(file.readline().rstrip().split())
+        sequences_reward.append(int(file.readline().rstrip()))
+
+    file.close()
+
+else:
+    pass
 
 matrix_2 = [[1 for i in range(width)] for i in range(height)]
 
@@ -112,10 +105,32 @@ def vertical(column,ctr,buffer,coor_buffer):
 
     return (max_reward,max_buffer,max_coor)
 
-def func():
-    max = horizontal(0,0,[],[])
-    for output in max:
-        print(output)
+start = round(time.time()*1000)
+max = horizontal(0,0,[],[])
+print(max[0])
+for tokens in max[1]:
+    print(tokens,end=" ")
+print()
+for coors in max[2]:
+    print(coors)
+end = round(time.time()*1000)
+print(f"\n{end-start} ms\n")
 
-print('test')
-func()
+is_simpan = input("Apakah ingin menyimpan solusi?(y/n) ")
+
+while (is_simpan != 'y' and is_simpan != 'n'):
+    print("Invalid input")
+    is_simpan = input("Apakah ingin menyimpan solusi?(y/n) ")
+
+if is_simpan == 'y':
+    file_output_name = input("Enter absolute path: ")
+
+    file_output = open(file_output_name,'w')
+    file_output.write(str(max[0])+'\n')
+    for tokens in max[1]:
+        file_output.write(tokens+" ")
+    file_output.write('\n')
+    for coors in max[2]:
+        file_output.write(coors+'\n')
+
+    file_output.close()
