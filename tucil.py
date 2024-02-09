@@ -30,16 +30,41 @@ if input_type == 'file':
     file.close()
 
 else:
-    pass
+    token_amount = int(input("Masukkan jumlah token unik: "))
+    tokens = input("Masukkan token-token (terpisah dengan spasi): ").split()
+    while len(tokens) != token_amount:
+        print("Jumlah token tidak sesuai")
+        tokens = input("Masukkan token-token (terpisah dengan spasi): ").split()
+    buffer_size = int(input("Masukkan ukuran buffer: "))
+    dimension = input("Masukkan ukuran matriks (width x height, terpisah dengan spasi): ").split()
+    width = int(dimension[0])
+    height = int(dimension[1])
+    sequences_amount = int(input("Masukkan jumlah sekuens: "))
+    max_sequence_length = int(input("Masukkan ukuran maksimal sekuens: "))
+    # belum ada handle case jika amount <= 0
 
-matrix_2 = [[1 for i in range(width)] for i in range(height)]
+    matrix = [[random.choice(tokens) for i in range(width)] for j in range(height)]
+    sequences = [[random.choice(tokens) for i in range(random.randint(1,max_sequence_length))] for j in range(sequences_amount)]
+    sequences_reward = [random.randint(1,50) for i in range(sequences_amount)]
+
+    # print(buffer_size)
+    # print(width, height)
+    # for i in range(height):
+    #     print(matrix[i])
+    # print(sequences_amount)
+    # print(sequences)
+    # print(sequences_reward)
+    
+matrix_2 = [[1 for i in range(width)] for j in range(height)]
 
 def checkReward(buffer):
     reward = 0
     for i in range(sequences_amount):
         # print(buffer)
         # print(sequences[i])
-        for j in range(len(buffer)-len(sequences[i])+1):
+        has_reward = False
+        j = 0
+        while not has_reward and j < (len(buffer)-len(sequences[i])+1):
             is_reward = True
             k = 0
             while is_reward and k < len(sequences[i]): 
@@ -48,6 +73,8 @@ def checkReward(buffer):
                 k += 1
             if is_reward:
                 reward += sequences_reward[i]
+                has_reward = True
+            j += 1
 
     return reward
 
