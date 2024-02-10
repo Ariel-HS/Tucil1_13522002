@@ -47,13 +47,15 @@ else:
     sequences = [[random.choice(tokens) for i in range(random.randint(1,max_sequence_length))] for j in range(sequences_amount)]
     sequences_reward = [random.randint(1,50) for i in range(sequences_amount)]
 
-    # print(buffer_size)
-    # print(width, height)
-    # for i in range(height):
-    #     print(matrix[i])
-    # print(sequences_amount)
-    # print(sequences)
-    # print(sequences_reward)
+    print(f"\nBuffer Size : {buffer_size}")
+    print(f"Matrix Size : {width} x {height}")
+    print(f"Matrix :")
+    for i in range(height):
+        print(f"    {matrix[i]}")
+    print(f"Jumlah Sequence : {sequences_amount}")
+    print(f"Sekuens dan Reward :")
+    for i in range(sequences_amount):
+        print(f"    {sequences[i]} - {sequences_reward[i]}")
     
 matrix_2 = [[1 for i in range(width)] for j in range(height)]
 
@@ -132,6 +134,7 @@ def vertical(column,ctr,buffer,coor_buffer):
 
     return (max_reward,max_buffer,max_coor)
 
+print("\nSolusi:")
 start = round(time.time()*1000)
 max = horizontal(0,0,[],[])
 print(max[0])
