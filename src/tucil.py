@@ -74,8 +74,6 @@ matrix_2 = [[1 for i in range(width)] for j in range(height)]
 def checkReward(buffer):
     reward = 0
     for i in range(sequences_amount):
-        # print(buffer)
-        # print(sequences[i])
         has_reward = False
         j = 0
         while not has_reward and j < (len(buffer)-len(sequences[i])+1):
@@ -94,7 +92,6 @@ def checkReward(buffer):
 
 def horizontal(row,ctr,buffer,coor_buffer):
     global buffer_size
-    # print(buffer,coor_buffer)
     max_reward = checkReward(buffer)
     max_buffer = buffer
     max_coor = coor_buffer
@@ -141,6 +138,9 @@ def vertical(column,ctr,buffer,coor_buffer):
 
                 if new_reward[0] > max_reward:
                     max_reward = new_reward[0]
+                    max_buffer = new_reward[1]
+                    max_coor = new_reward[2]
+                elif (new_reward[0] == max_reward) and (len(new_reward[1])<len(max_buffer)):
                     max_buffer = new_reward[1]
                     max_coor = new_reward[2]
 
