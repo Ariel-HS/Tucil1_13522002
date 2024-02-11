@@ -41,7 +41,6 @@ else:
     height = int(dimension[1])
     sequences_amount = int(input("Masukkan jumlah sekuens: "))
     max_sequence_length = int(input("Masukkan ukuran maksimal sekuens: "))
-    # belum ada handle case jika amount <= 0
 
     matrix = [[random.choice(tokens) for i in range(width)] for j in range(height)]
     sequences = [[random.choice(tokens) for i in range(random.randint(1,max_sequence_length))] for j in range(sequences_amount)]
@@ -56,7 +55,20 @@ else:
     print(f"Sekuens dan Reward :")
     for i in range(sequences_amount):
         print(f"    {sequences[i]} - {sequences_reward[i]}")
-    
+
+# cek sequence unik (kalau tidak unik, reward = 0)
+for i in range(sequences_amount-1):
+    for j in range(i+1,sequences_amount):
+        if len(sequences[i]) == len(sequences[j]):
+            is_same = True
+            k = 0
+            while is_same and k < len(sequences[i]):
+                if sequences[i][k] != sequences[j][k]:
+                    is_same = False
+                k += 1
+            if is_same:
+                sequences_reward[j] = 0
+
 matrix_2 = [[1 for i in range(width)] for j in range(height)]
 
 def checkReward(buffer):

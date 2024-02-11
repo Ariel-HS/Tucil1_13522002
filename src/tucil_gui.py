@@ -3,6 +3,7 @@ import time
 import random
 import tkinter as tk
 from tkinter import * 
+from tkinter.filedialog import askopenfile
 
 window = tk.Tk(className="python Cyberpunk 2077 Breach Protocol Solver")
 window.geometry("1024x576")
@@ -10,24 +11,35 @@ window.configure(background="#16151b")
 window.resizable(False,False)
 
 def func():
-    buffer_size = int(buffer_entry.get())
-    matrix = matrix_entry.get('1.0','end-1c').split("\n")
+    buffer_size = int(buffer_entry.get().rstrip())
+    matrix = matrix_entry.get('1.0','end-1c').rstrip().split("\n")
     matrix = [line.split() for line in matrix]
     height = len(matrix)
     width = len(matrix[0])
-    sequences = sequence_entry.get('1.0','end-1c').split("\n")
+    sequences = sequence_entry.get('1.0','end-1c').rstrip().split("\n")
     sequences = [line.split() for line in sequences]
     sequences_amount = len(sequences)
-    sequences_reward = reward_entry.get('1.0','end-1c').split("\n")
+    sequences_reward = reward_entry.get('1.0','end-1c').rstrip().split("\n")
     sequences_reward = [int(amount) for amount in sequences_reward]
+
+    # cek sequence unik (kalau tidak unik, reward = 0)
+    for i in range(sequences_amount-1):
+        for j in range(i+1,sequences_amount):
+            if len(sequences[i]) == len(sequences[j]):
+                is_same = True
+                k = 0
+                while is_same and k < len(sequences[i]):
+                    if sequences[i][k] != sequences[j][k]:
+                        is_same = False
+                    k += 1
+                if is_same:
+                    sequences_reward[j] = 0
 
     matrix_2 = [[1 for i in range(width)] for j in range(height)]
 
     def checkReward(buffer):
         reward = 0
         for i in range(sequences_amount):
-            # print(buffer)
-            # print(sequences[i])
             has_reward = False
             j = 0
             while not has_reward and j < (len(buffer)-len(sequences[i])+1):
@@ -45,7 +57,6 @@ def func():
         return reward
 
     def horizontal(buffer_size,row,ctr,buffer,coor_buffer):
-        # print(buffer,coor_buffer)
         max_reward = checkReward(buffer)
         max_buffer = buffer
         max_coor = coor_buffer
@@ -71,7 +82,6 @@ def func():
         return (max_reward,max_buffer,max_coor)
 
     def vertical(buffer_size,column,ctr,buffer,coor_buffer):
-        # print(buffer,coor_buffer)
         max_reward = checkReward(buffer)
         max_buffer = buffer
         max_coor = coor_buffer
@@ -95,10 +105,6 @@ def func():
                         max_coor = new_reward[2]
 
         return (max_reward,max_buffer,max_coor)
-
-    # print(buffer_size)
-    # print(matrix)
-    # print(sequences)
 
     start = round(time.time()*1000)
     max = horizontal(buffer_size,0,0,[],[])
@@ -146,6 +152,24 @@ def func():
     time_text.insert(END, f"time: {duration} ms")
     time_text.config(state='disabled')
 
+def upload():
+    file = askopenfile(mode='r')
+
+    buffer_entry.delete(0,END)
+    matrix_entry.delete('1.0',END)
+    sequence_entry.delete('1.0',END)
+    reward_entry.delete('1.0',END)
+
+    buffer_entry.insert(END,file.readline().rstrip())
+    dimension = file.readline().rstrip().split()
+    for i in range(int(dimension[1])):
+        matrix_entry.insert(END,file.readline())
+    sequences_amount = int(file.readline().rstrip())
+    for i in range(sequences_amount):
+        sequence_entry.insert(END,file.readline())
+        reward_entry.insert(END,file.readline())
+
+    file.close()
 
 title = tk.Frame(master=window,height='100',bg="#16151b")
 title.pack(fill=tk.X)
@@ -204,5 +228,8 @@ reward_entry = tk.Text(master=rewardbox,width=454,height=280,bg='#16151b',bd=0,f
 reward_entry.insert(END,"15\n...")
 reward_entry.pack(padx=10,pady=10)
 reward_entry.pack_propagate(False)
+
+upload_button = tk.Button(master=title,text="Upload File",command=upload)
+upload_button.pack(side="left",padx=20)
 
 window.mainloop()
