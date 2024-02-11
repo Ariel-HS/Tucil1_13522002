@@ -90,8 +90,7 @@ def checkReward(buffer):
 
     return reward
 
-def horizontal(row,ctr,buffer,coor_buffer):
-    global buffer_size
+def horizontal(buffer_size,row,ctr,buffer,coor_buffer):
     max_reward = checkReward(buffer)
     max_buffer = buffer
     max_coor = coor_buffer
@@ -104,7 +103,7 @@ def horizontal(row,ctr,buffer,coor_buffer):
                 coor_buffer.append(str(i+1)+','+str(row+1))
                 new_buffer = buffer.copy()
                 new_coor_buffer = coor_buffer.copy()
-                new_reward = vertical(i,ctr+1,new_buffer,new_coor_buffer)
+                new_reward = vertical(buffer_size,i,ctr+1,new_buffer,new_coor_buffer)
                 buffer.pop()
                 coor_buffer.pop()
                 matrix_2[row][i] = 1
@@ -113,12 +112,13 @@ def horizontal(row,ctr,buffer,coor_buffer):
                     max_reward = new_reward[0]
                     max_buffer = new_reward[1]
                     max_coor = new_reward[2]
+                elif (new_reward[0] == max_reward) and (len(new_reward[1])<len(max_buffer)):
+                    max_buffer = new_reward[1]
+                    max_coor = new_reward[2]
     
     return (max_reward,max_buffer,max_coor)
 
-def vertical(column,ctr,buffer,coor_buffer):
-    global buffer_size
-    # print(buffer,coor_buffer)
+def vertical(buffer_size,column,ctr,buffer,coor_buffer):
     max_reward = checkReward(buffer)
     max_buffer = buffer
     max_coor = coor_buffer
@@ -131,7 +131,7 @@ def vertical(column,ctr,buffer,coor_buffer):
                 coor_buffer.append(str(column+1)+','+str(i+1))
                 new_buffer = buffer.copy()
                 new_coor_buffer = coor_buffer.copy()
-                new_reward = horizontal(i,ctr+1,new_buffer,new_coor_buffer)
+                new_reward = horizontal(buffer_size,i,ctr+1,new_buffer,new_coor_buffer)
                 buffer.pop()
                 coor_buffer.pop()
                 matrix_2[i][column] = 1
@@ -143,12 +143,12 @@ def vertical(column,ctr,buffer,coor_buffer):
                 elif (new_reward[0] == max_reward) and (len(new_reward[1])<len(max_buffer)):
                     max_buffer = new_reward[1]
                     max_coor = new_reward[2]
-
+                    
     return (max_reward,max_buffer,max_coor)
 
 print("\nSolusi:")
 start = round(time.time()*1000)
-max = horizontal(0,0,[],[])
+max = horizontal(buffer_size,0,0,[],[])
 print(max[0])
 for tokens in max[1]:
     print(tokens,end=" ")

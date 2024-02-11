@@ -107,7 +107,10 @@ def func():
                         max_reward = new_reward[0]
                         max_buffer = new_reward[1]
                         max_coor = new_reward[2]
-
+                    elif (new_reward[0] == max_reward) and (len(new_reward[1])<len(max_buffer)):
+                        max_buffer = new_reward[1]
+                        max_coor = new_reward[2]
+                        
         return (max_reward,max_buffer,max_coor)
 
     start = round(time.time()*1000)
