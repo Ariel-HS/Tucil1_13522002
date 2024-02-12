@@ -220,7 +220,7 @@ def openRandomize():
 
         # Pembuatan matriks dan sequence secara acak
         matrix = [[random.choice(tokens) for i in range(width)] for j in range(height)]
-        sequences = [[random.choice(tokens) for i in range(random.randint(1,max_sequence_length))] for j in range(sequences_amount)]
+        sequences = [[random.choice(tokens) for i in range(random.randint(2,max_sequence_length))] for j in range(sequences_amount)]
         sequences_reward = [random.randint(1,50) for i in range(sequences_amount)]
 
         buffer_entry.delete(0,END)

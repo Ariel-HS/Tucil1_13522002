@@ -32,6 +32,7 @@ if input_type == 'file':
 
 # Input secara acak
 else:
+    # Pengambilan input dari user
     token_amount = int(input("Masukkan jumlah token unik: "))
     tokens = input("Masukkan token-token (terpisah dengan spasi): ").split()
     while len(tokens) != token_amount:
@@ -44,8 +45,9 @@ else:
     sequences_amount = int(input("Masukkan jumlah sekuens: "))
     max_sequence_length = int(input("Masukkan ukuran maksimal sekuens: "))
 
+    # Pembuatan matriks dan sequence secara acak
     matrix = [[random.choice(tokens) for i in range(width)] for j in range(height)]
-    sequences = [[random.choice(tokens) for i in range(random.randint(1,max_sequence_length))] for j in range(sequences_amount)]
+    sequences = [[random.choice(tokens) for i in range(random.randint(2,max_sequence_length))] for j in range(sequences_amount)]
     sequences_reward = [random.randint(1,50) for i in range(sequences_amount)]
 
     print(f"\nBuffer Size : {buffer_size}")
