@@ -6,12 +6,15 @@ from tkinter import *
 from tkinter.filedialog import askopenfile
 from tkinter.filedialog import asksaveasfile
 
+# Inisialisasi window gui
 window = tk.Tk(className="python Cyberpunk 2077 Breach Protocol Solver")
 window.geometry("1024x576")
 window.configure(background="#16151b")
 window.resizable(False,False)
 
+# Fungsi untuk mencari solusi
 def func():
+    # mengambil input dari entry
     buffer_size = int(buffer_entry.get().rstrip())
     matrix = matrix_entry.get('1.0','end-1c').rstrip().split("\n")
     matrix = [line.split() for line in matrix]
@@ -36,8 +39,10 @@ def func():
                 if is_same:
                     sequences_reward[j] = 0
 
+    # Inisialisasi matriks untuk mencegah node dikunjungi dua kali
     matrix_2 = [[1 for i in range(width)] for j in range(height)]
 
+    # Fungsi untuk mengkalkulasi reward dari sequence (buffer)
     def checkReward(buffer):
         reward = 0
         for i in range(sequences_amount):
@@ -57,6 +62,7 @@ def func():
 
         return reward
 
+    # Fungsi untuk mencari semua kemungkinan sequence dari suatu row
     def horizontal(buffer_size,row,ctr,buffer,coor_buffer):
         max_reward = checkReward(buffer)
         max_buffer = buffer
@@ -84,7 +90,8 @@ def func():
                         max_coor = new_reward[2]
         
         return (max_reward,max_buffer,max_coor)
-
+    
+    # Fungsi untuk mencari semua kemungkinan sequence dari suatu column
     def vertical(buffer_size,column,ctr,buffer,coor_buffer):
         max_reward = checkReward(buffer)
         max_buffer = buffer
@@ -114,10 +121,11 @@ def func():
         return (max_reward,max_buffer,max_coor)
 
     start = round(time.time()*1000)
-    max = horizontal(buffer_size,0,0,[],[])
+    max = horizontal(buffer_size,0,0,[],[]) 
     end = round(time.time()*1000)
     duration = end-start
 
+    # Inisialisasi window popup untuk menampilkan solusi
     popup = Toplevel(master=window,bg="#16151b")
     popup.geometry("450x440")
     popup.title("Solution")
@@ -159,6 +167,7 @@ def func():
     time_text.insert(END, f"time: {duration} ms")
     time_text.config(state='disabled')
 
+    # Fungsi untuk menyimpan solusi ke dalam file
     def save():
         file = asksaveasfile(mode='w',defaultextension=".txt")
         if not file is None:
@@ -173,6 +182,7 @@ def func():
     save_button = tk.Button(master=popup,text="Save as File",command=save)
     save_button.pack(padx=10,side='top',anchor='w')
 
+# Fungsi untuk mengimport file sebagai input
 def upload():
     file = askopenfile(mode='r')
 
@@ -192,9 +202,12 @@ def upload():
 
     file.close()
 
+# Fungsi untuk mengeluarkan popup untuk input secara acak
 def openRandomize():
 
+    # Fungsi untuk membuat matriks dan sequence secara acak
     def randomize():
+        # Mengambil input pengguna 
         token_amount = int(token_num_entry.get().rstrip())
         tokens = token_entry.get().rstrip().split()
         tokens = [tokens[i] for i in range(token_amount)]
@@ -204,6 +217,8 @@ def openRandomize():
         height = int(dimension[1])
         sequences_amount = int(sequence_num_entry.get().rstrip())
         max_sequence_length = int(sequence_max_entry.get().rstrip())
+
+        # Pembuatan matriks dan sequence secara acak
         matrix = [[random.choice(tokens) for i in range(width)] for j in range(height)]
         sequences = [[random.choice(tokens) for i in range(random.randint(1,max_sequence_length))] for j in range(sequences_amount)]
         sequences_reward = [random.randint(1,50) for i in range(sequences_amount)]
@@ -230,6 +245,7 @@ def openRandomize():
 
         popup.destroy()
 
+    # Inisialisasi popup untuk input
     popup = Toplevel(master=window,bg="#16151b")
     popup.geometry("400x400")
     popup.title("Randomize")
@@ -269,6 +285,7 @@ def openRandomize():
     randomize_button.pack(expand=True)
     randomize_button.pack_propagate(False)
 
+# Pembuatan GUI
 title = tk.Frame(master=window,height='100',bg="#16151b")
 title.pack(fill=tk.X)
 title.pack_propagate(False)

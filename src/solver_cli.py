@@ -7,6 +7,7 @@ while input_type != 'file' and input_type != 'acak':
     print("Invalid input")
     input_type = input("Apakah ingin memasukkan input melalui file atau secara acak?(file/acak) ")
 
+# Input dari file
 if input_type == 'file':
     file_name = input("Enter absolute path: ")
     while not os.path.isfile(file_name):
@@ -29,6 +30,7 @@ if input_type == 'file':
 
     file.close()
 
+# Input secara acak
 else:
     token_amount = int(input("Masukkan jumlah token unik: "))
     tokens = input("Masukkan token-token (terpisah dengan spasi): ").split()
@@ -69,8 +71,10 @@ for i in range(sequences_amount-1):
             if is_same:
                 sequences_reward[j] = 0
 
+# Inisialisasi matriks untuk mencegah node dikunjungi dua kali
 matrix_2 = [[1 for i in range(width)] for j in range(height)]
 
+# Fungsi untuk mengkalkulasi reward dari sequence (buffer)
 def checkReward(buffer):
     reward = 0
     for i in range(sequences_amount):
@@ -90,6 +94,7 @@ def checkReward(buffer):
 
     return reward
 
+# Fungsi untuk mencari semua kemungkinan sequence dari suatu row
 def horizontal(buffer_size,row,ctr,buffer,coor_buffer):
     max_reward = checkReward(buffer)
     max_buffer = buffer
@@ -118,6 +123,7 @@ def horizontal(buffer_size,row,ctr,buffer,coor_buffer):
     
     return (max_reward,max_buffer,max_coor)
 
+# Fungsi untuk mencari semua kemungkinan sequence dari suatu column
 def vertical(buffer_size,column,ctr,buffer,coor_buffer):
     max_reward = checkReward(buffer)
     max_buffer = buffer
@@ -146,6 +152,7 @@ def vertical(buffer_size,column,ctr,buffer,coor_buffer):
                     
     return (max_reward,max_buffer,max_coor)
 
+# Output Terminal
 print("\nSolusi:")
 start = round(time.time()*1000)
 max = horizontal(buffer_size,0,0,[],[])
@@ -160,6 +167,7 @@ print(f"\n{end-start} ms\n")
 
 is_simpan = input("Apakah ingin menyimpan solusi?(y/n) ")
 
+# Output File
 while (is_simpan != 'y' and is_simpan != 'n'):
     print("Invalid input")
     is_simpan = input("Apakah ingin menyimpan solusi?(y/n) ")
